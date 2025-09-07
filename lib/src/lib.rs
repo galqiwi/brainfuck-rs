@@ -1,0 +1,11 @@
+use std::io::Stdin;
+use crate::interpreter::run_bytecode;
+
+pub mod instruction;
+pub mod interpreter;
+pub mod parse;
+
+pub fn run(code: &str) {
+    let bytecode = parse::parse(code);
+    run_bytecode(&bytecode, std::io::stdin(), std::io::stdout());
+}

@@ -1,0 +1,10 @@
+[workspace]
+members = ["lib"]
+
+[package]
+name = "brainfuck-rs"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+lib = {path = "lib"}
