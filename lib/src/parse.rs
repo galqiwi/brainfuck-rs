@@ -4,7 +4,7 @@ use crate::instruction::Instruction::{
 };
 
 pub fn parse(code: &str) -> Vec<Instruction> {
-    let mut code = code.chars().enumerate();
+    let code = code.chars().enumerate();
 
     let mut output = Vec::new();
     let mut loop_stack: Vec<usize> = Vec::new();
