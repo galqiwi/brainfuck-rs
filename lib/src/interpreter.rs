@@ -91,7 +91,7 @@ mod tests {
     #[test]
     fn test_state_increment_decrement() {
         let mut state = State::new();
-        
+
         assert_eq!(state.get_data(), 0);
         state.set_data(state.get_data().wrapping_add(1));
         assert_eq!(state.get_data(), 1);
@@ -102,11 +102,11 @@ mod tests {
     #[test]
     fn test_state_wrapping() {
         let mut state = State::new();
-        
+
         state.set_data(255);
         state.set_data(state.get_data().wrapping_add(1));
         assert_eq!(state.get_data(), 0);
-        
+
         state.set_data(0);
         state.set_data(state.get_data().wrapping_sub(1));
         assert_eq!(state.get_data(), 255);
@@ -116,10 +116,10 @@ mod tests {
     fn test_state_move_right() {
         let mut state = State::new();
         assert_eq!(state.position, 0);
-        
+
         state.move_right();
         assert_eq!(state.position, 1);
-        
+
         state.move_right();
         assert_eq!(state.position, 2);
     }
@@ -130,10 +130,10 @@ mod tests {
         state.move_right();
         state.move_right();
         assert_eq!(state.position, 2);
-        
+
         state.move_left();
         assert_eq!(state.position, 1);
-        
+
         state.move_left();
         assert_eq!(state.position, 0);
     }
@@ -149,11 +149,11 @@ mod tests {
     fn test_state_memory_expansion() {
         let mut state = State::new();
         let initial_len = state.memory.len();
-        
+
         for _ in 0..initial_len {
             state.move_right();
         }
-        
+
         assert_eq!(state.memory.len(), initial_len + 1);
         assert_eq!(state.get_data(), 0);
     }
@@ -163,7 +163,7 @@ mod tests {
         let bytecode = vec![Increment, Increment, Increment];
         let input = Cursor::new(Vec::new());
         let mut output = Vec::new();
-        
+
         run_bytecode(&bytecode, input, &mut output);
         assert_eq!(output.len(), 0);
     }
@@ -171,24 +171,19 @@ mod tests {
     #[test]
     fn test_output() {
         let bytecode = vec![
-            Increment, Increment, Increment, Increment, Increment,
-            Increment, Increment, Increment, Increment, Increment,
-            Increment, Increment, Increment, Increment, Increment,
-            Increment, Increment, Increment, Increment, Increment,
-            Increment, Increment, Increment, Increment, Increment,
-            Increment, Increment, Increment, Increment, Increment,
-            Increment, Increment, Increment, Increment, Increment,
-            Increment, Increment, Increment, Increment, Increment,
-            Increment, Increment, Increment, Increment, Increment,
-            Increment, Increment, Increment, Increment, Increment,
-            Increment, Increment, Increment, Increment, Increment,
-            Increment, Increment, Increment, Increment, Increment,
-            Increment, Increment, Increment, Increment, Increment,
-            Output,
+            Increment, Increment, Increment, Increment, Increment, Increment, Increment, Increment,
+            Increment, Increment, Increment, Increment, Increment, Increment, Increment, Increment,
+            Increment, Increment, Increment, Increment, Increment, Increment, Increment, Increment,
+            Increment, Increment, Increment, Increment, Increment, Increment, Increment, Increment,
+            Increment, Increment, Increment, Increment, Increment, Increment, Increment, Increment,
+            Increment, Increment, Increment, Increment, Increment, Increment, Increment, Increment,
+            Increment, Increment, Increment, Increment, Increment, Increment, Increment, Increment,
+            Increment, Increment, Increment, Increment, Increment, Increment, Increment, Increment,
+            Increment, Output,
         ];
         let input = Cursor::new(Vec::new());
         let mut output = Vec::new();
-        
+
         run_bytecode(&bytecode, input, &mut output);
         assert_eq!(output, vec![65]); // ASCII 'A'
     }
@@ -198,7 +193,7 @@ mod tests {
         let bytecode = vec![Input, Output];
         let input = Cursor::new(vec![72]); // ASCII 'H'
         let mut output = Vec::new();
-        
+
         run_bytecode(&bytecode, input, &mut output);
         assert_eq!(output, vec![72]);
     }
@@ -208,7 +203,7 @@ mod tests {
         let bytecode = vec![BeginLoop(2), Increment, EndLoop(0)];
         let input = Cursor::new(Vec::new());
         let mut output = Vec::new();
-        
+
         run_bytecode(&bytecode, input, &mut output);
         assert_eq!(output.len(), 0);
     }
@@ -216,12 +211,17 @@ mod tests {
     #[test]
     fn test_simple_loop_execute() {
         let bytecode = vec![
-            Increment, Increment, Increment,
-            BeginLoop(6), Decrement, Output, EndLoop(3)
+            Increment,
+            Increment,
+            Increment,
+            BeginLoop(6),
+            Decrement,
+            Output,
+            EndLoop(3),
         ];
         let input = Cursor::new(Vec::new());
         let mut output = Vec::new();
-        
+
         run_bytecode(&bytecode, input, &mut output);
         assert_eq!(output, vec![2, 1, 0]);
     }
@@ -229,16 +229,11 @@ mod tests {
     #[test]
     fn test_move_and_set() {
         let bytecode = vec![
-            Increment, Increment, Increment,
-            GoRight,
-            Increment, Increment,
-            Output,
-            GoLeft,
-            Output,
+            Increment, Increment, Increment, GoRight, Increment, Increment, Output, GoLeft, Output,
         ];
         let input = Cursor::new(Vec::new());
         let mut output = Vec::new();
-        
+
         run_bytecode(&bytecode, input, &mut output);
         assert_eq!(output, vec![2, 3]);
     }
@@ -246,22 +241,47 @@ mod tests {
     #[test]
     fn test_hello_world_pattern() {
         let bytecode = vec![
-            Increment, Increment, Increment, Increment, Increment,
-            Increment, Increment, Increment, Increment, Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
             BeginLoop(21),
-                GoRight,
-                Increment, Increment, Increment, Increment, Increment, Increment, Increment,
-                GoRight,
-                Increment, Increment, Increment, Increment, Increment, Increment, Increment, Increment, Increment, Increment,
-                GoLeft, GoLeft,
-                Decrement,
+            GoRight,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            GoRight,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            Increment,
+            GoLeft,
+            GoLeft,
+            Decrement,
             EndLoop(10),
-            GoRight, GoRight,
+            GoRight,
+            GoRight,
             Output,
         ];
         let input = Cursor::new(Vec::new());
         let mut output = Vec::new();
-        
+
         run_bytecode(&bytecode, input, &mut output);
         assert_eq!(output[0], 100); // Should be close to 'd' or similar
     }
@@ -271,7 +291,7 @@ mod tests {
         let bytecode = vec![];
         let input = Cursor::new(Vec::new());
         let mut output = Vec::new();
-        
+
         run_bytecode(&bytecode, input, &mut output);
         assert_eq!(output.len(), 0);
     }
@@ -282,7 +302,7 @@ mod tests {
         let bytecode = vec![Abort];
         let input = Cursor::new(Vec::new());
         let mut output = Vec::new();
-        
+
         run_bytecode(&bytecode, input, &mut output);
     }
 }
