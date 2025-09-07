@@ -4,12 +4,12 @@ use crate::instruction::Instruction::{
 };
 
 pub fn parse(code: &str) -> Vec<Instruction> {
-    let mut code = code.chars().into_iter().enumerate();
+    let mut code = code.chars().enumerate();
 
     let mut output = Vec::new();
     let mut loop_stack: Vec<usize> = Vec::new();
 
-    while let Some((idx, c)) = code.next() {
+    for (idx, c) in code {
         let new_instruction = match c {
             '>' => GoRight,
             '<' => GoLeft,

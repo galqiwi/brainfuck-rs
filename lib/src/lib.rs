@@ -1,5 +1,4 @@
 use crate::interpreter::run_bytecode;
-use std::io::Stdin;
 
 pub mod instruction;
 pub mod interpreter;
